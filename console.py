@@ -1,4 +1,4 @@
-from threading import Thread
+import asyncio
 import time
 import sys
 
@@ -10,20 +10,18 @@ class display:
     def __init__(self):
         self.delay = 0.1
         self.strings = [" " * 20, " " * 20, " " * 20, " " * 20]
-        t = Thread(target=self.loop)
-        t.daemon = True
-        t.start()
+        asyncio.create_task(self.loop())
 
-    def display(self, string, line=1, pos=0):
+    async def display(self, string, line=1, pos=0):
         self.strings[line - 1] = (" " * pos + string + " " * 20)[:20]
 
-    def loop(self):
+    async def loop(self):
         print("\n" * 3)
         while True:
-            self.update()
-            time.sleep(self.delay)
+            await self.update()
+            await asyncio.sleep(self.delay)
 
-    def update(self):
+    async def update(self):
         for i in range(4):
             up()
         print("\33[44m" + "\n".join(self.strings) + "\33[0m")
