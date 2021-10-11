@@ -145,9 +145,9 @@ class display:
    # put string function with optional char positioning
    async def display(self, string, line=1, pos=0, alignRight=False, reset=True):
     if alignRight:
-     pos -= len(string)
+      pos -= len(string)
     if reset:
-     string = " " * pos + string + " " * (20 - (pos + len(string)))
+      string = " " * pos + string + " " * (20 - (pos + len(string)))
     if line == 1:
       pos_new = pos
     elif line == 2:
@@ -160,7 +160,10 @@ class display:
     self.lcd_write(0x80 + pos_new)
 
     for char in string:
-      self.lcd_write(ord(char), Rs)
+      if char == "°":
+        self.lcd_write(0xDF)
+      else:
+        self.lcd_write(ord(char), Rs)
 
    # clear lcd and set to home
    def lcd_clear(self):
@@ -179,4 +182,4 @@ class display:
       self.lcd_write(0x40)
       for char in fontdata:
          for line in char:
-            self.lcd_write_char(line)         
+            self.lcd_write_char(line)
