@@ -143,8 +143,11 @@ class display:
       self.lcd_write_four_bits(mode | ((charvalue << 4) & 0xF0))
   
    # put string function with optional char positioning
-   def display(self, string, line=1, pos=0):
-#    def lcd_display_string(self, string, line=1, pos=0):
+   async def display(self, string, line=1, pos=0, alignRight=False, reset=True):
+    if alignRight:
+     pos -= len(string)
+    if reset:
+     string = " " * pos + string + " " * (20 - (pos + len(string)))
     if line == 1:
       pos_new = pos
     elif line == 2:

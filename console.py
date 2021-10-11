@@ -6,7 +6,9 @@ def up():
     sys.stdout.write('\x1b[1A')
     sys.stdout.flush()
 
-def insert(original, string, pos):
+def insert(original, string, pos, alignRight=False):
+    if alignRight:
+        return original[:pos - len(string)] + string + original[pos:]
     return original[:pos] + string + original[pos + len(string):]
 
 class display:
@@ -15,8 +17,11 @@ class display:
         self.strings = [" " * 20, " " * 20, " " * 20, " " * 20]
         asyncio.create_task(self.loop())
 
-    async def display(self, string, line=1, pos=0):
-        self.strings[line - 1] = (insert(self.strings[line - 1], string, pos))[:20]
+    async def display(self, string, line=1, pos=0, alignRight=False, reset=True):
+        if reset:
+            self.strings[line - 1] = (insert(" " * 20, string, pos, alignRight))[:20]
+        else:
+            self.strings[line - 1] = (insert(self.strings[line - 1], string, pos, alignRight))[:20]
 
     async def loop(self):
         print("\n" * 3)
