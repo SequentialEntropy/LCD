@@ -161,7 +161,7 @@ class display:
 
     for char in string:
       if char == "°":
-        self.lcd_write(0xDF)
+        self.lcd_write(0xDF, Rs)
       else:
         self.lcd_write(ord(char), Rs)
 
