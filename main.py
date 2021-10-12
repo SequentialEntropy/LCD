@@ -19,7 +19,7 @@ async def display_time(display):
     while True:
         time_out = time.strftime("%H:%M:%S")
         await display.display(time_out, 1, 20, alignRight=True, reset=False)
-        await asyncio.sleep(1)
+        await asyncio.sleep(0.1)
 
 async def display_online(display, server):
     while True:
