@@ -51,6 +51,13 @@ async def display_disk(display):
         await display.display(percent_space_out, 4, 20, alignRight=True, reset=False)
         await asyncio.sleep(60)
 
+async def hang(seconds=None):
+    if seconds != None:
+        await asyncio.sleep(seconds)
+    else:
+        while True:
+            await asyncio.sleep(1)
+
 async def createDisplay():
     display = screen.display()
     return display
@@ -66,7 +73,9 @@ async def main():
     tasks.append(asyncio.create_task(display_cpu(display)))
     tasks.append(asyncio.create_task(display_ram(display)))
     tasks.append(asyncio.create_task(display_disk(display)))
-    await asyncio.gather(*tasks)
+    tasks.append(asyncio.create_task(hang()))
+    # await asyncio.gather(*tasks)
+    await tasks[len(tasks) - 1]
 
 if __name__ == '__main__':
     asyncio.run(main())
