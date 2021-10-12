@@ -63,7 +63,7 @@ async def createDisplay():
     return display
 
 async def main():
-    server = StatusPing(input("Enter server name/ip to track: "))
+    # server = StatusPing(input("Enter server name/ip to track: "))
 
     display = await createDisplay()
     tasks = []
