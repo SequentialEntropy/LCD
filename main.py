@@ -1,8 +1,9 @@
 import asyncio
-try:
-    import i2c as screen
-except ImportError:
-    import console as screen
+#try:
+#    import i2c as screen
+#except ImportError:
+#    import console as screen
+import console as screen
 
 import time
 
