@@ -1,7 +1,6 @@
 import platform
 import subprocess
 import getpass
-import time
 import shutil
 import psutil
 

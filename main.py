@@ -10,6 +10,13 @@ import time
 from status import StatusPing
 import stats
 
+from bus import bus_stop
+
+import os
+
+from loadenv import environ
+environ()
+
 async def display_date(display):
     while True:
         date_out = time.strftime("%a %d %b")
@@ -52,6 +59,22 @@ async def display_disk(display):
         await display.display(percent_space_out, 4, length=4, alignRight=True)
         await asyncio.sleep(60)
 
+async def bus_time(display):
+    stop = bus_stop(os.environ["STOP"])
+    route = os.environ["ROUTE"]
+    while True:
+        await stop.update(os.environ["KEY"])
+        await display.display("{}: {}".format(route, "   ".join([str(bus.waiting_time) for bus in stop.buses[route]])), 4)
+        await asyncio.sleep(20)
+
+async def ram_disk(display):
+    while True:
+        percent_ram_out = "RAM: {}%".format(stats.percent_ram())
+        percent_disk_out = "Disk: {}%".format(stats.percent_space())
+        await display.display(percent_ram_out, 3, length=10)
+        await display.display(percent_disk_out, 3, pos=10, length=10)
+        await asyncio.sleep(1)
+
 async def hang(seconds=None):
     if seconds != None:
         await asyncio.sleep(seconds)
@@ -72,8 +95,10 @@ async def main():
     tasks.append(asyncio.create_task(display_time(display)))
     # tasks.append(asyncio.create_task(display_online(display, server)))
     tasks.append(asyncio.create_task(display_cpu(display)))
-    tasks.append(asyncio.create_task(display_ram(display)))
-    tasks.append(asyncio.create_task(display_disk(display)))
+    # tasks.append(asyncio.create_task(display_ram(display)))
+    # tasks.append(asyncio.create_task(display_disk(display)))
+    tasks.append(asyncio.create_task(ram_disk(display)))
+    tasks.append(asyncio.create_task(bus_time(display)))
     tasks.append(asyncio.create_task(hang()))
     # await asyncio.gather(*tasks)
     await tasks[len(tasks) - 1]
