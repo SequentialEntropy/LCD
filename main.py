@@ -64,7 +64,10 @@ async def bus_time(display):
     route = os.environ["ROUTE"]
     while True:
         await stop.update(os.environ["KEY"])
-        await display.display("{}: {}".format(route, "   ".join([str(bus.waiting_time) for bus in stop.buses[str(route)]])), 4)
+        try:
+            await display.display("{}: {}".format(route, "   ".join([str(bus.waiting_time) for bus in stop.buses[str(route)]])), 4, reset=True)
+        except KeyError:
+            await display.display("{}: No Services".format(route), 4, reset=True)
         await asyncio.sleep(20)
 
 async def ram_disk(display):
