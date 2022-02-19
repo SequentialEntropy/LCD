@@ -18,7 +18,7 @@ def display_task(function):
     def io_exit(*args, **kwargs):
         try:
             return function(*args, **kwargs)
-        except IOError as e:
+        except OSError as e:
             print(e)
             sys.exit()
     return io_exit
