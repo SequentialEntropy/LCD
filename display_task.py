@@ -80,7 +80,7 @@ async def bus_time(display):
     while True:
         await stop.update(os.environ["KEY"])
         try:
-            await display.display("{}: {}".format(route, "   ".join([str(bus.waiting_time) for bus in stop.buses[str(route)]])), 4, reset=True)
+            await display.display("{}: {}".format(route, "   ".join(["Arr" if bus.waiting_time == 0 else str(bus.waiting_time) for bus in stop.buses[str(route)]])), 4, reset=True)
         except KeyError:
             await display.display("{}: No Services".format(route), 4, reset=True)
         await asyncio.sleep(20)
