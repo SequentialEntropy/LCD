@@ -25,11 +25,14 @@ class bus_stop:
         self.operators = {}
         
     async def update(self, key):
+        buses = {}
+        operators = {}
         async with aiohttp.ClientSession(headers={"AccountKey": key, "accept": "application/json"}) as session:
             async with session.get("http://datamall2.mytransport.sg/ltaodataservice/BusArrivalv2?BusStopCode={}".format(self.stop)) as get:
                 data = await get.json()
         for service in data["Services"]:
-            bus_list = []
+            buses[service["ServiceNo"]] = []
+            operators[service["ServiceNo"]] = service["Operator"]
             for next_bus in ["NextBus", "NextBus2", "NextBus3"]:
                 # origin, destination, arrival, latitude, longitude, visit, congestion, wheelchair, kind
                 valid = True
@@ -59,7 +62,7 @@ class bus_stop:
                         kind = "bendy"
                     else:
                         kind = "single"
-                    bus_list.append(bus(
+                    buses[service["ServiceNo"]].append(bus(
                         int(service[next_bus]["OriginCode"]),
                         int(service[next_bus]["DestinationCode"]),
                         datetime.datetime.strptime(service[next_bus]["EstimatedArrival"], "%Y-%m-%dT%H:%M:%S%z"),
@@ -70,6 +73,5 @@ class bus_stop:
                         wheelchair,
                         kind
                     ))
-
-            self.buses[service["ServiceNo"]] = bus_list.copy()
-            self.operators[service["ServiceNo"]] = service["Operator"]
+        self.buses = buses
+        self.operators = operators
