@@ -28,8 +28,8 @@ async def main():
     tasks.append(asyncio.create_task(d.ram_disk(display)))
     tasks.append(asyncio.create_task(d.bus_time(display)))
     tasks.append(asyncio.create_task(d.hang()))
-    # await asyncio.gather(*tasks)
-    await tasks[len(tasks) - 1]
+    await asyncio.gather(*tasks)
+    # await tasks[len(tasks) - 1]
 
 if __name__ == '__main__':
     asyncio.run(main())
