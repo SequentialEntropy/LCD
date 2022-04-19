@@ -8,6 +8,9 @@ except ImportError:
 from loadenv import environ
 environ()
 
+import loadbustasks
+bus_tasks_list = loadbustasks.load()
+
 import display_task as d
 
 async def createDisplay():
@@ -21,12 +24,10 @@ async def main():
     tasks = []
     tasks.append(asyncio.create_task(d.display_date(display)))
     tasks.append(asyncio.create_task(d.display_time(display)))
-    # tasks.append(asyncio.create_task(d.display_online(display, server)))
-    tasks.append(asyncio.create_task(d.display_cpu(display)))
-    # tasks.append(asyncio.create_task(d.display_ram(display)))
-    # tasks.append(asyncio.create_task(d.display_disk(display)))
-    tasks.append(asyncio.create_task(d.ram_disk(display)))
-    tasks.append(asyncio.create_task(d.bus_time(display)))
+    # tasks.append(asyncio.create_task(d.display_cpu(display)))
+    # tasks.append(asyncio.create_task(d.ram_disk(display)))
+    for bus_task in bus_tasks_list:
+        tasks.append(asyncio.create_task(d.bus_time(display, bus_task["row"], bus_task["stop_id"], bus_task["route"])))
     tasks.append(asyncio.create_task(d.hang()))
     await asyncio.gather(*tasks)
     # await tasks[len(tasks) - 1]
